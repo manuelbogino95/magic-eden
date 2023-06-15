@@ -1,3 +1,4 @@
+import { formatCurrencyUSD } from "@/lib/helpers";
 import Image from "next/image";
 
 export function ItemBox({ item: { id, title, img, price } }: { item: NFT }) {
@@ -13,7 +14,7 @@ export function ItemBox({ item: { id, title, img, price } }: { item: NFT }) {
         />
       </div>
       <h3 className="mt-4 text-sm">{title}</h3>
-      <p className="mt-1 text-lg font-medium">{price}</p>
+      <p className="mt-1 text-lg font-medium">{formatCurrencyUSD(price)}</p>
     </div>
   );
 }
