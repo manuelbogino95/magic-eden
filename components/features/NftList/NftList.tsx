@@ -3,11 +3,12 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { Fragment, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { ItemBox } from "./components";
+import { Spinner } from "@/components/ui/Spinner";
 
 export function NftList() {
   const { ref, inView } = useInView();
 
-  const { status, data, fetchNextPage } = useInfiniteQuery(
+  const { status, data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(
     ["nfts"],
     async ({ pageParam = 0 }) => {
       return fetchNfts(pageParam);
@@ -28,7 +29,7 @@ export function NftList() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       {status === "loading" ? (
-        <p>Loading...</p>
+        <Spinner />
       ) : (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-4 lg:gap-10">
           {data?.pages.map((page, index) => (
@@ -41,6 +42,7 @@ export function NftList() {
         </div>
       )}
       <div ref={ref} />
+      {isFetchingNextPage ? <Spinner /> : null}
     </main>
   );
 }
