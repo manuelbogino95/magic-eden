@@ -3,7 +3,6 @@ import { useInView } from "react-intersection-observer";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React from "react";
-import { FixedSizeGrid as Grid } from "react-window";
 
 interface NFT {
   id: string;
