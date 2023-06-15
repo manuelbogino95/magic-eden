@@ -3,10 +3,11 @@ import { useInView } from "react-intersection-observer";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React from "react";
+import { FixedSizeGrid as Grid } from "react-window";
 
 interface NFT {
   id: string;
-  name: string;
+  title: string;
   img: string;
   price: number;
 }
@@ -15,10 +16,28 @@ interface ApiResponse<T> {
   results: T[];
 }
 
+function ItemBox({ item: { id, title, img, price } }: { item: NFT }) {
+  return (
+    <div key={id} className="group">
+      <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+        <Image
+          src={img}
+          width={200}
+          height={200}
+          alt=""
+          className="h-full w-full object-cover object-center group-hover:opacity-75"
+        />
+      </div>
+      <h3 className="mt-4 text-sm">{title}</h3>
+      <p className="mt-1 text-lg font-medium">{price}</p>
+    </div>
+  );
+}
+
 export default function Home() {
   const { ref, inView } = useInView();
 
-  const { status, data, fetchNextPage, fetchPreviousPage } = useInfiniteQuery(
+  const { status, data, fetchNextPage } = useInfiniteQuery(
     ["nfts"],
     async ({ pageParam = 0 }) => {
       const res = await axios.get<ApiResponse<NFT>>(
@@ -48,13 +67,7 @@ export default function Home() {
           {data?.pages.map((page, index) => (
             <React.Fragment key={`page-${index}`}>
               {page.results.map((item) => (
-                <Image
-                  key={item.id}
-                  src={item.img}
-                  width={200}
-                  height={200}
-                  alt=""
-                />
+                <ItemBox key={item.id} item={item} />
               ))}
             </React.Fragment>
           ))}
